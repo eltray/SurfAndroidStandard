@@ -27,3 +27,5 @@ dependencies {
 
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 }
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'

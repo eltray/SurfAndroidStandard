@@ -46,5 +46,6 @@ class MainActivityView : BaseRenderableActivityView<MainScreenModel>(), SessionF
     private fun initListeners() {
         check_root_btn.setOnClickListener { presenter.checkRoot() }
         open_session_btn.setOnClickListener { presenter.openSession() }
+        open_free_screen_btn.setOnClickListener { presenter.openFreeScreen() }
     }
 }

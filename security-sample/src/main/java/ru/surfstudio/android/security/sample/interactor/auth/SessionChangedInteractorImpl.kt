@@ -13,7 +13,7 @@ class SessionChangedInteractorImpl(private val globalNavigator: GlobalNavigator
         openAuthScreen()
     }
 
-    fun openAuthScreen() {
+    private fun openAuthScreen() {
         globalNavigator.start(MainActivityRoute(true))
     }
 }

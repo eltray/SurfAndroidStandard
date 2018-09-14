@@ -7,6 +7,7 @@ import ru.surfstudio.android.core.ui.navigation.activity.navigator.ActivityNavig
 import ru.surfstudio.android.dagger.scope.PerScreen
 import ru.surfstudio.android.security.root.RootChecker
 import ru.surfstudio.android.security.sample.R
+import ru.surfstudio.android.security.sample.ui.screen.free.FreeActivityRoute
 import ru.surfstudio.android.security.sample.ui.screen.session.SessionActivityRoute
 import javax.inject.Inject
 
@@ -31,5 +32,9 @@ class MainPresenter @Inject constructor(basePresenterDependency: BasePresenterDe
 
     fun openSession() {
         activityNavigator.start(SessionActivityRoute())
+    }
+
+    fun openFreeScreen() {
+        activityNavigator.start(FreeActivityRoute())
     }
 }

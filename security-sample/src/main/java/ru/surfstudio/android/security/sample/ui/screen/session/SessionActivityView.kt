@@ -3,6 +3,7 @@ package ru.surfstudio.android.security.sample.ui.screen.session
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.support.annotation.LayoutRes
+import kotlinx.android.synthetic.main.activity_session.*
 import ru.surfstudio.android.core.mvp.activity.BaseRenderableActivityView
 import ru.surfstudio.android.core.mvp.presenter.CorePresenter
 import ru.surfstudio.android.logger.Logger
@@ -34,10 +35,15 @@ class SessionActivityView : BaseRenderableActivityView<SessionScreenModel>() {
                           viewRecreated: Boolean) {
         super.onCreate(savedInstanceState, persistentState, viewRecreated)
         Logger.d("AAA SessionActivityView onCreate")
+        initListeners()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         Logger.d("AAA SessionActivityView onCreate")
+    }
+
+    private fun initListeners() {
+        open_free_screen_btn.setOnClickListener { presenter.openFreeScreen() }
     }
 }

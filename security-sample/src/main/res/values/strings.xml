@@ -5,4 +5,6 @@
     <string name="no_root_message">No Root</string>
     <string name="open_session_btn_text">Open session</string>
     <string name="session_screen_tv_text">Session screen</string>
+    <string name="open_free_screen_btn">Open free screen</string>
+    <string name="session_free_screen_tv_text">Session Free Screen</string>
 </resources>
