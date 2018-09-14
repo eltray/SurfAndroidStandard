@@ -6,6 +6,7 @@ import android.support.annotation.LayoutRes
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.surfstudio.android.core.mvp.activity.BaseRenderableActivityView
 import ru.surfstudio.android.core.mvp.presenter.CorePresenter
+import ru.surfstudio.android.logger.Logger
 import ru.surfstudio.android.security.sample.R
 import ru.surfstudio.android.security.sample.ui.base.configurator.CustomActivityScreenConfigurator
 import ru.surfstudio.android.security.session.SessionFree
@@ -30,6 +31,12 @@ class MainActivityView : BaseRenderableActivityView<MainScreenModel>(), SessionF
                           persistentState: PersistableBundle?,
                           viewRecreated: Boolean) {
         initListeners()
+        Logger.d("AAA MainActivityView onCreate")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Logger.d("AAA MainActivityView onDestroy")
     }
 
     override fun renderInternal(screenModel: MainScreenModel) { }
