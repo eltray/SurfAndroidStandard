@@ -57,6 +57,6 @@ class CustomAppModule(private val coreApp: CoreApp) {
     @Provides
     @PerApplication
     internal fun provideSessionManager(sessionChangedInteractor: SessionChangedInteractor): SessionManager {
-        return SessionManager(sessionChangedInteractor, 10L)
+        return SessionManager(sessionChangedInteractor, 60L)
     }
 }
