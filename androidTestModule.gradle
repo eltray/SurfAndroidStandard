@@ -1,7 +1,7 @@
 android {
     defaultConfig {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArgument "listener", "de.schroepf.androidxmlrunlistener.XmlRunListener"
+        testInstrumentationRunnerArgument "listener", "ru.surfstudio.android.test_runner.XmlRunListener"
     }
 }
 
