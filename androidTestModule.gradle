@@ -13,6 +13,7 @@ dependencies {
     testImplementation "org.powermock:powermock-classloading-xstream:$powerMockVersion"
     kaptTest "com.google.dagger:dagger-compiler:$daggerVersion"
 
+    androidTestImplementation project(':test-runner')
     androidTestImplementation "androidx.test:core:$androidxTestVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxTestExtJunitVersion"
     androidTestImplementation "androidx.test:runner:$androidXTestRunnerVersion"

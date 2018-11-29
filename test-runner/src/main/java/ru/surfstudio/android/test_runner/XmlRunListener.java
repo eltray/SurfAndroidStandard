@@ -2,6 +2,7 @@ package ru.surfstudio.android.test_runner;
 
 import android.app.Instrumentation;
 import android.os.Build;
+import android.os.Bundle;
 import android.util.Log;
 import android.util.Xml;
 
@@ -14,6 +15,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Map;
 
 import androidx.test.internal.runner.listener.InstrumentationRunListener;
@@ -252,5 +254,11 @@ public class XmlRunListener extends InstrumentationRunListener {
      */
     private String sanitize(String text) {
         return text.replace("\0", "<\\0>");
+    }
+
+    @Override
+    public void instrumentationRunFinished(PrintStream streamResult, Bundle resultBundle, Result junitResults) {
+        super.instrumentationRunFinished(streamResult, resultBundle, junitResults);
+        throw new RuntimeException("FAIL!!!!!!!!!!!!!!!!1");
     }
 }
