@@ -14,7 +14,7 @@ import ru.surfstudio.android.core.mvi.ui.reactor.StateHolder
  */
 interface RxBinder {
 
-    fun <T : Event, SH : StateHolder> bind(
+    fun <T : Event, SH : StateHolder<T>> bind(
             eventHub: RxEventHub<T>,
             middleware: RxMiddleware<T>,
             stateHolder: SH,
@@ -34,7 +34,7 @@ interface RxBinder {
     infix fun <T> Observable<T>.bindEvents(consumer: Consumer<T>) =
             subscribe(this, consumer::accept, ::onError)
 
-    fun <T : Event, SH : StateHolder> Observable<T>.bindEvents(stateHolder: SH, reactor: Reactor<T, SH>) =
+    fun <T : Event, SH : StateHolder<T>> Observable<T>.bindEvents(stateHolder: SH, reactor: Reactor<T, SH>) =
             subscribe(
                     this,
                     {

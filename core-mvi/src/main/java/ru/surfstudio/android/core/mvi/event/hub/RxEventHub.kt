@@ -10,3 +10,9 @@ import ru.surfstudio.android.core.mvi.event.Event
 interface RxEventHub<T : Event> :
         EventHub<T, Observable<T>>,
         Consumer<T>
+
+inline fun <reified R> RxEventHub<*>.observeOnly(): Observable<R> {
+    return this.observe()
+            .filter { it is R }
+            .map { it as R }
+}

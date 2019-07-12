@@ -7,6 +7,7 @@ import ru.surfstudio.android.core.mvi.sample.ui.base.middleware.BaseMiddleware
 import ru.surfstudio.android.core.mvi.sample.ui.base.middleware.BaseMiddlewareDependency
 import ru.surfstudio.android.core.mvi.sample.ui.screen.list.event.ReactiveListEvent
 import ru.surfstudio.android.core.mvi.sample.ui.screen.list.reactor.ReactiveListStateHolder
+import ru.surfstudio.android.core.mvi.ui.middleware.filterIsInstance
 import ru.surfstudio.android.dagger.scope.PerScreen
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -28,15 +29,16 @@ class ReactiveListMiddleware @Inject constructor(
         is ReactiveListEvent.Reload -> loadData()
         is ReactiveListEvent.SwipeRefresh -> loadData(isSwr = true)
         is ReactiveListEvent.LoadNextPage -> loadData(sh.state.data.nextPage)
+        is ReactiveListEvent.Show -> reactOnShowEvent(event)
         else -> skip()
     }
 
     private fun transformQueryEvent(
-            eventStream: Observable<out ReactiveListEvent>
+            eventStream: Observable<ReactiveListEvent>
     ): Observable<ReactiveListEvent.QueryChangedDebounced> =
             eventStream
-                    .filter { it is ReactiveListEvent.QueryChanged }
-                    .map { (it as ReactiveListEvent.QueryChanged).query }
+                    .filterIsInstance<ReactiveListEvent.QueryChanged>()
+                    .map { it.query }
                     .distinctUntilChanged()
                     .debounce(1000, TimeUnit.MILLISECONDS)
                     .map { ReactiveListEvent.QueryChangedDebounced(it) }
@@ -44,6 +46,17 @@ class ReactiveListMiddleware @Inject constructor(
     private fun reactOnLifecycle(stage: LifecycleStage): Observable<out ReactiveListEvent> =
             when (stage) {
                 LifecycleStage.CREATE -> loadData()
+                else -> skip()
+            }
+
+    private fun reactOnShowEvent(event: ReactiveListEvent.Show): Observable<out ReactiveListEvent> =
+            when (event) {
+                is ReactiveListEvent.Show.LoadNumbers, is ReactiveListEvent.Show.QueryChanged -> {
+                    val data = sh.state.data
+                    val filtered = data.filter { it.contains(sh.queryChangedEvent.query) }
+                    val filteredEvent = ReactiveListEvent.Show.FilterNumbers(filtered)
+                    Observable.just(filteredEvent)
+                }
                 else -> skip()
             }
 

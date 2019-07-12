@@ -7,3 +7,7 @@ package ru.surfstudio.android.core.mvi.event
 interface OpenScreen : Event {
     val name: String
 }
+
+interface ShowEvent {
+
+}

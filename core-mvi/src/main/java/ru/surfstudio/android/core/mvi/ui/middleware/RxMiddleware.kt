@@ -41,5 +41,10 @@ interface RxMiddleware<T : Event> : Middleware<T, Observable<T>, Observable<out 
     fun Observable<T>.ignoreError() = onErrorResumeNext { _: Throwable -> Observable.empty() }
 
     fun merge(vararg observables: Observable<out T>) = Observable.merge(observables.toList())
+}
 
+inline fun <reified R> Observable<*>.filterIsInstance(): Observable<R> {
+    return this
+            .filter { it is R }
+            .map { it as R }
 }

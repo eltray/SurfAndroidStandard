@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.textChanges
 import kotlinx.android.synthetic.main.activity_reactive_list.*
+import ru.surfstudio.android.core.mvi.event.hub.observeOnly
 import ru.surfstudio.android.core.mvi.sample.R
 import ru.surfstudio.android.core.mvi.ui.BaseReactActivityView
 import ru.surfstudio.android.easyadapter.ItemList
@@ -41,6 +42,14 @@ class ReactiveListActivityView : BaseReactActivityView() {
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?, viewRecreated: Boolean) {
         super.onCreate(savedInstanceState, persistentState, viewRecreated)
 
+        bm bindTo { event ->
+            when (event) {
+                is ReactiveListEvent.Show.FilterNumbers -> createList(event.data)
+                is ReactiveListEvent.Show.QueryChanged -> {
+                    reactive_query_tv.text.run { replace(0, length, event.query) }
+                }
+            }
+        }
         reactive_rv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         reactive_rv.adapter = adapter
 
@@ -56,7 +65,7 @@ class ReactiveListActivityView : BaseReactActivityView() {
 
         bm.state.observeMainLoading() bindTo { reactive_pb.isVisible = it }
         bm.state.observeSwrLoading() bindTo { reactive_swr.isRefreshing = it }
-        bm.state.observeData bindTo ::createList
+        bm.queryState bindTo { reactive_query_tv.text.run { replace(0, length, it.getOrNull()) } }
     }
 
     private fun createList(list: List<String>) {
