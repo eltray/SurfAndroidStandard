@@ -1,5 +1,6 @@
 package ru.surfstudio.android.core.mvi.sample.ui.screen.list.reactor
 
+import ru.surfstudio.android.core.mvi.event.Event
 import ru.surfstudio.android.core.mvi.sample.domain.datalist.DataList
 import ru.surfstudio.android.core.mvp.binding.rx.loadable.state.LoadableState
 import ru.surfstudio.android.core.mvi.sample.ui.base.holder.BaseStateHolder
@@ -7,6 +8,7 @@ import ru.surfstudio.android.core.mvi.sample.ui.screen.list.event.ReactiveListEv
 import ru.surfstudio.android.core.mvi.sample.ui.screen.list.extension.mapDataList
 import ru.surfstudio.android.core.mvi.sample.ui.screen.list.extension.mapError
 import ru.surfstudio.android.core.mvi.sample.ui.screen.list.extension.mapLoading
+import ru.surfstudio.android.core.mvi.ui.effect.SideEffect
 import ru.surfstudio.android.core.mvi.ui.reactor.Reactor
 import ru.surfstudio.android.core.mvp.binding.rx.relation.mvp.State
 import ru.surfstudio.android.dagger.scope.PerScreen
@@ -18,10 +20,11 @@ class ReactiveListStateHolder @Inject constructor() : BaseStateHolder<ReactiveLi
     val query = State<String>()
     val filteredList = State<List<String>>()
 
-    override val sideEffects = listOf(
-            list.observeData with { ReactiveListEvent.Ui.ShowNumbers(it) },
-            query with { ReactiveListEvent.Ui.ShowQuery(it) }
-    )
+    override val sideEffects = createEffects {
+        add { list.observeData with { ReactiveListEvent.Ui.ShowNumbers(it) } }
+        add { query with { ReactiveListEvent.Ui.ShowQuery(it) } }
+    }
+
 }
 
 @PerScreen
@@ -60,3 +63,14 @@ class ReactiveListReactor @Inject constructor() : Reactor<ReactiveListEvent, Rea
         holder.filteredList.accept(list)
     }
 }
+
+
+fun <E : Event, H : BaseStateHolder<out E>> H.createEffects(block: Pair<H, MutableList<SideEffect<E, *>>>.() -> Unit) = effects(this, block)
+
+fun <E : Event, H : BaseStateHolder<out E>> effects(holder: H, block: Pair<H, MutableList<SideEffect<E, *>>>.() -> Unit): MutableList<SideEffect<E, *>> {
+    val listWithEffects = mutableListOf<SideEffect<E, *>>()
+    return (holder to listWithEffects).apply(block).second
+}
+
+infix fun <E : Event, L : MutableList<SideEffect<E, *>>, H : BaseStateHolder<out E>> Pair<H, L>.add(block: H.() -> SideEffect<E, *>) =
+        this.second.add(this.first.run(block))
